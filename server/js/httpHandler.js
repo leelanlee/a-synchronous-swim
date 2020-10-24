@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const headers = require('./cors');
 const multipart = require('./multipartUtils');
+const messages = require('./messageQueue');
 
 // Path for the background image ///////////////////////
 module.exports.backgroundImageFile = path.join('.', 'background.jpg');
@@ -20,14 +21,33 @@ module.exports.router = (req, res, next = ()=>{}) => {
   if (req.method === "OPTIONS") {
     res.writeHead(200, headers);
     res.end();
-    console.log(req);
-    console.log(res)
   }
+  //
+  // if (req.method === "GET") {
+  //   if(req.url === '/') {
+  //     res.writeHead(200, headers);
+  //     res.end(randomCommandGenerator());
+  //   }
+  // }
 
   if (req.method === "GET") {
     if(req.url === '/') {
+      console.log(messages)
       res.writeHead(200, headers);
-      res.end(randomCommandGenerator());
+      res.end(messages.dequeue());
+    }
+
+    if (req.url === '/background.jpg') {
+      fs.readFile(module.exports.backgroundImageFile, (err, data) => {
+        if (err) {
+          res.writeHead(404, headers);
+        }
+        else {
+          res.writeHead(200, headers);
+          res.write(data, 'binary');
+        }
+        res.end();
+      })
     }
   }
 
@@ -35,8 +55,9 @@ module.exports.router = (req, res, next = ()=>{}) => {
   next(); // invoke next() at the end of a request to help with testing!
 
 };
-var randomCommandGenerator = () => {
-  var command = ['up', 'down', 'left', 'right'];
-  var random = Math.floor(Math.random() * 4);
-  return (command[random]);
-}
+
+// var randomCommandGenerator = () => {
+//   var command = ['up', 'down', 'left', 'right'];
+//   var random = Math.floor(Math.random() * 4);
+//   return (command[random]);
+// }
