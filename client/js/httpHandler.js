@@ -4,7 +4,22 @@
 
   //
   // TODO: build the swim command fetcher here
+  // sending keypress information from keypressHandler to client?
+  // ajax request to post information that will update the position of .swimmers to one of four options
   //
+  //
+  const fetchRandomSwimCommand = (command) => {
+    $.ajax({
+      type: 'GET',
+      url: serverUrl,
+      data: {
+        command: command
+      },
+      // need 200 response code and response ended to be true
+      success: (res) => (SwimTeam.move(res)),
+      error: (error) => console.log(error, 'random command get request failed')
+    });
+  };
 
   /////////////////////////////////////////////////////////////////////
   // The ajax file uplaoder is provided for your convenience!
@@ -17,7 +32,7 @@
     $.ajax({
       type: 'POST',
       data: formData,
-      url: 'FILL_ME_IN',
+      url: serverUrl,
       cache: false,
       contentType: false,
       processData: false,
