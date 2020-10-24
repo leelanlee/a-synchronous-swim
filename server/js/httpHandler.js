@@ -21,17 +21,22 @@ module.exports.router = (req, res, next = ()=>{}) => {
     res.writeHead(200, headers);
     res.end();
     console.log(req);
-    console.log(res);
+    console.log(res)
   }
 
   if (req.method === "GET") {
-    res.writeHead(200, headers);
-    res.end('up');
-    console.log(req);
-    console.log(res);
+    if(req.url === '/') {
+      res.writeHead(200, headers);
+      res.end(randomCommandGenerator());
+    }
   }
 
 
   next(); // invoke next() at the end of a request to help with testing!
 
 };
+var randomCommandGenerator = () => {
+  var command = ['up', 'down', 'left', 'right'];
+  var random = Math.floor(Math.random() * 4);
+  return (command[random]);
+}

@@ -8,18 +8,32 @@
   // ajax request to post information that will update the position of .swimmers to one of four options
   //
   //
-  const fetchRandomSwimCommand = (command) => {
+  const fetchRandomSwimCommand = () => {
     $.ajax({
       type: 'GET',
       url: serverUrl,
-      data: {
-        command: command
-      },
+      // data: formData,
+      // cache: false,
+      // contentType: false,
+      // processData: false,
       // need 200 response code and response ended to be true
-      success: (res) => (SwimTeam.move(res)),
-      error: (error) => console.log(error, 'random command get request failed')
+      success: (data) => {
+        console.log(data);
+        // console.log(res._data);
+        SwimTeam.move(data);
+        // console.log(res);
+      },
+      error: (error) => {console.log(error, 'random command get request failed')}
     });
   };
+
+  $('.random').on('click', (event) => {
+    fetchRandomSwimCommand();
+  });
+
+
+
+
 
   /////////////////////////////////////////////////////////////////////
   // The ajax file uplaoder is provided for your convenience!
